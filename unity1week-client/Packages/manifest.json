@@ -14,6 +14,8 @@
     "com.unity.visualscripting": "1.9.9",
     "com.unityroom.client": "https://github.com/unityroom/unityroom-sdk.git?path=src/Unityroom.Client/Assets/Unityroom.Client",
     "io.github.hatayama.uloopmcp": "https://github.com/hatayama/uLoopMCP.git?path=/Packages/src",
+    "jp.co.cyberagent.address-definition-generator": "https://github.com/CyberAgentGameEntertainment/AddressDefinitionGenerator.git?path=/Packages/AddressDefinitionGenerator",
+    "jp.co.cyberagent.smartaddresser": "https://github.com/CyberAgentGameEntertainment/SmartAddresser.git?path=/Assets/SmartAddresser",
     "com.unity.modules.accessibility": "1.0.0",
     "com.unity.modules.adaptiveperformance": "1.0.0",
     "com.unity.modules.ai": "1.0.0",
