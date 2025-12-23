@@ -6,7 +6,11 @@ public class Stage1Button : MonoBehaviour
 {
     public void OnStartButtonClicked()
     {
-        // Instance経由で命令を送る！
-        SceneNavigator.Instance.ChangeSceneAsync("Stage1").Forget();
+        if (SceneNavigator.Instance != null)
+        {
+            // 「このオブジェクトが壊れたらキャンセル」という信号を渡す
+            var ct = SceneNavigator.Instance.GetCancellationTokenOnDestroy();
+            SceneNavigator.Instance.ChangeSceneAsync("Stage1", ct).Forget();
+        }
     }
 }
