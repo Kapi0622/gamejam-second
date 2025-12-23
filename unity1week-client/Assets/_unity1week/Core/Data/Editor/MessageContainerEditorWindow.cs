@@ -216,17 +216,20 @@ namespace Unity1week.Core.Editor
 
             var elementProp = messagesProp.GetArrayElementAtIndex(selectedIndex);
             
-            var inspector = new InspectorElement();
-            // Note: InspectorElement for a SerializedProperty directly is tricky. 
-            // Usually we use PropertyField for the whole element.
+            // Iterate through children to avoid the top-level foldout
+            var iterator = elementProp.Copy();
+            var endProperty = iterator.GetEndProperty();
+            bool enterChildren = true;
             
-            var propertyField = new PropertyField(elementProp);
-            propertyField.Bind(_serializedObject);
-            
-            _rightPane.Add(propertyField);
-            
-            // Re-bind preview when value changes
-            propertyField.RegisterValueChangeCallback(_ => _mainView.Rebuild());
+            while (iterator.NextVisible(enterChildren) && !SerializedProperty.EqualContents(iterator, endProperty))
+            {
+                var childField = new PropertyField(iterator.Copy());
+                childField.Bind(_serializedObject);
+                childField.RegisterValueChangeCallback(_ => _mainView.Rebuild());
+                _rightPane.Add(childField);
+                
+                enterChildren = false; // Only enter the first level of children
+            }
         }
     }
 }
