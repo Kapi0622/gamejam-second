@@ -4,45 +4,41 @@ using Cysharp.Threading.Tasks;
 
 namespace UI
 {
-    public class SceneNavigator : MonoBehaviour
+    public class SceneNavigator : SingletonMonoBehaviour<SceneNavigator>
     {
-        public static SceneNavigator Instance { get; private set; }
-
         [SerializeField] private CanvasGroup fadeCanvasGroup;
         [SerializeField] private float fadeDuration = 0.5f;
-
-        private void Awake()
+        
+        protected override void Awake()
         {
-            if (Instance == null)
-            {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
-                
-                // 最初はクリックを通すようにしておく
-                fadeCanvasGroup.blocksRaycasts = false;
-                fadeCanvasGroup.alpha = 0f;
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
+            // 基盤のAwake（DontDestroyOnLoadなど）を実行する
+            base.Awake();
+            
+            fadeCanvasGroup.blocksRaycasts = false;
+            fadeCanvasGroup.alpha = 0f;
         }
 
         public async UniTask ChangeSceneAsync(string nextSceneName)
         {
-            // 1. フェードアウト開始
-            fadeCanvasGroup.blocksRaycasts = true; // クリックをブロック開始！
             await FadeAsync(1f);
+            
+            for (int i = 0; i < SceneManager.sceneCount; i++)
+            {
+                Scene scene = SceneManager.GetSceneAt(i);
+                // "Manager" 以外のシーンは消去
+                if (scene.name != "Manager")
+                {
+                    await SceneManager.UnloadSceneAsync(scene);
+                }
+            }
 
-            // 2. シーン入れ替え
-            string currentSceneName = SceneManager.GetActiveScene().name;
-            await SceneManager.UnloadSceneAsync(currentSceneName);
+            // 次のシーンを読み込む
             await SceneManager.LoadSceneAsync(nextSceneName, LoadSceneMode.Additive);
+    
+            // 新しいシーンを「アクティブ」に設定（これで次からは GetActiveScene で取れるようになる）
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(nextSceneName));
 
-            // 3. フェードイン開始
             await FadeAsync(0f);
-            fadeCanvasGroup.blocksRaycasts = false; // フェードが終わったらクリックを通す！
         }
 
         private async UniTask FadeAsync(float targetAlpha)
