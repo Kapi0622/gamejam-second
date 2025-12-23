@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" editor-extension-mode="False" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd">
+    <ui:TwoPaneSplitView fixed-pane-initial-dimension="300">
+        <ui:VisualElement name="LeftPane">
+            <uie:Toolbar>
+                <uie:ToolbarMenu name="AddMenu" text="Add Message" />
+                <uie:ToolbarButton name="RemoveButton" text="Remove" />
+            </uie:Toolbar>
+            <ui:MultiColumnListView name="MainView" fixed-item-height="24">
+                <ui:Columns>
+                    <ui:Column name="TypeColumn" title="Type" width="100" />
+                    <ui:Column name="PreviewColumn" title="Content" stretchable="true" />
+                </ui:Columns>
+            </ui:MultiColumnListView>
+        </ui:VisualElement>
+        <ui:ScrollView name="RightPane" />
+    </ui:TwoPaneSplitView>
+</ui:UXML>
